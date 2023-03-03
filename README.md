@@ -6,7 +6,6 @@ A lightweight node.js Promise based wrapper around the [Visionect Server Managem
 ```sh
 npm add node-visionect
 ```
-
 ## Example
 ```js
 const {VisionectApiClient} = require('node-joan');
@@ -21,8 +20,9 @@ visionect.devices.update()
 ```
 
 ## APIs
+
+### Devices APIs
 ```js
-// Devices APIs
 visionect.devices.get() // get all devices
 visionect.devices.get(uuid) // get a particular device
 
@@ -36,8 +36,10 @@ visionect.devices.config(uuid, data) // Set config for device
 
 visionect.devices.reboot(uuid) // reboot one device
 visionect.devices.reboot() // reboot all devices
+```
 
-// Session APIs
+### Session APIs
+```js
 visionect.sessions.get() // get all sessions
 visionect.sessions.get(uuid) // get a particular session
 
@@ -49,6 +51,17 @@ visionect.sessions.create(data) // create a session
 visionect.sessions.restart(uuid) // restart a session
 visionect.sessions.restart() // restart all sessions
 visionect.sessions.clearCache(uuid1, uuid2, /*...*/) // restart sessions for given uuids
+```
+
+### User APIs
+```js
+visionect.users.get() // get all users
+visionect.users.get(username) // get a particular user
+
+visionect.users.update(username, data) // update a particular user
+visionect.users.update(data) // update all users
+
+visionect.users.create(data) // create a user
 ```
 
 ### Primitive APIs

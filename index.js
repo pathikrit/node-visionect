@@ -19,26 +19,25 @@ class VisionectApiClient {
   delete = (path, data) => this.call('DELETE', path, data)
   options = (path) => this.call('OPTIONS', path)
 
-  devices = {
-    get: (uuid) => this.get(`/api/device/${uuid || ''}`),
-    update: (arg1, arg2) => arg2 ? this.put(`/api/device/${arg1}`, arg2) : this.put(`/api/device/`, arg1),
-    delete: (uuid) => this.delete(`/api/device/${uuid}`),
+  crud = (name) => Object.create({
+    get: (id) => this.get(`/api/${name}/${id || ''}`),
+    create: (id, data) => this.post(`/api/${name}/${id}`, data),
+    update: (arg1, arg2) => arg2 ? this.put(`/api/${name}/${arg1}`, arg2) : this.put(`/api/${name}/`, arg1),
+    delete: (id) => this.delete(`/api/${name}/${id}`),
+  })
+
+  devices = Object.assign(this.crud('device'), {
     config: (uuid, data) => data ? this.post(`/api/cmd/Param/${uuid}`, data) : this.get(`/api/devicetclv/${uuid}`),
     reboot: (uuid) => this.post(uuid ? `/api/device/${uuid}/reboot` : '/api/device/reboot')
-  }
+  })
+  //TODO: delete devices['create'];
 
-  sessions = {
-    get: (uuid) => this.get(`/api/session/${uuid || ''}`),
-    create: (uuid, data) => this.post(`/api/session/${uuid}`, data),
-    update: (arg1, arg2) => arg2 ? this.put(`/api/session/${arg1}`, arg2) : this.put(`/api/session/`, arg1),
-    delete: (uuid) => this.delete(`/api/session/${uuid}`),
+  sessions = Object.assign(this.crud('session'), {
     restart: (uuid) => this.post(uuid ? `/api/session/${uuid}/restart` : '/api/device/restart'),
     clearCache: (...uuids) => this.post('/api/session/webkit-clear-cache', uuids)
-  }
+  })
 
-  users = {
-    list: () => this.get('/api/user/')
-  }
+  users = this.crud('user')
 }
 
 module.exports = {VisionectApiClient}
