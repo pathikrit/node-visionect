@@ -18,3 +18,8 @@ jobs:
         cache: 'npm'
     - run: yarn install --frozen-lockfile
     - run: npm test
+      env:
+        apiServer: ${{ secrets.APISERVER }}
+        apiKey: ${{ secrets.APIKEY }}
+        apiSecret: ${{ secrets.APISECRET }}
+        uuid: ${{ secrets.UUID }}

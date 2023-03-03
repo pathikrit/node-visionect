@@ -1,4 +1,6 @@
-This is a lightweight nodejs Promise based wrapper around the [Visionect Server Management API](http://api.visionect.com/)
+# node-visionect  [![CI](https://github.com/pathikrit/node-visionect/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/pathikrit/node-visionect/actions/workflows/ci.yml)
+
+A lightweight node.js Promise based wrapper around the [Visionect Server Management API](http://api.visionect.com/)
 
 ## Installation [![NPM Package Version](https://img.shields.io/npm/v/node-visionect.svg?)](https://www.npmjs.com/package/node-visionect)
 ```sh
@@ -14,8 +16,8 @@ const visionect = new VisionectApiClient('https://localhost:8081', 'apiKey', 'ap
 visionect.devices.all.list().then(res => console.log(res))
 
 visionect.device.update()
-.then(res => console.log(res))
-.catch(err => console.error(err))
+  .then(res => console.log(res))
+  .catch(err => console.error(err))
 ```
 
 ## APIs
