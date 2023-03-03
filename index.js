@@ -7,7 +7,8 @@ class VisionectApiClient {
       const hmac = str => crypto.createHmac('sha256', apiSecret).update(str).digest("base64")
       const headers = {'Date': new Date().toUTCString(), 'Content-Type': 'application/json',}
       headers['Authorization'] = `${apiKey}:${hmac([method, '', headers['Content-Type'], headers['Date'], path].join('\n'))}`
-      return axios({method: method, url: apiServer + path, headers: headers, data: data}).then(res => res.data)
+      const promise = axios({method: method, url: apiServer + path, headers: headers, data: data})
+      return process.env.NODE_ENV === 'test' ? {name: `${method} ${path}`, promise: promise} : promise.then(res => res.data)
     }
   }
 
@@ -20,13 +21,9 @@ class VisionectApiClient {
 
   devices = {
     get: (uuid) => this.get(`/api/device/${uuid || ''}`),
-    update: (uuid, data) => this.put(`/api/device/${uuid}`, data),
-    updateAll: (data) => this.put(`/api/device/`, data),
+    update: (arg1, arg2) => arg2 ? this.put(`/api/device/${arg1}`, arg2) : this.put(`/api/device/`, arg1),
     delete: (uuid) => this.delete(`/api/device/${uuid}`),
-    config: {
-      get: (uuid) => this.get(`/api/devicetclv/${uuid}`),
-      set: (uuid, data) => this.post(`/api/cmd/Param/${uuid}`, data)
-    },
+    config: (uuid, data) => data ? this.post(`/api/cmd/Param/${uuid}`, data) : this.get(`/api/devicetclv/${uuid}`),
     reboot: (uuid) => this.post(uuid ? `/api/device/${uuid}/reboot` : '/api/device/reboot')
   }
 
