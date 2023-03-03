@@ -8,7 +8,7 @@ npm add node-visionect
 ```
 ## Example
 ```js
-const {VisionectApiClient} = require('node-joan');
+const VisionectApiClient = require('node-joan');
 
 const visionect = new VisionectApiClient('https://localhost:8081', 'apiKey', 'apiSecret')
 
@@ -62,6 +62,12 @@ visionect.users.update(username, data) // update a particular user
 visionect.users.update(data) // update all users
 
 visionect.users.create(data) // create a user
+```
+
+### Config APIs
+```js
+visionect.config() // Get server config
+visionect.config(data) // Set server config
 ```
 
 ### Primitive APIs

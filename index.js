@@ -38,6 +38,8 @@ class VisionectApiClient {
   })
 
   users = this.crud('user')
+
+  config = (data) => data ? this.put('/api/config/', data) : this.get('/api/config/')
 }
 
-module.exports = {VisionectApiClient}
+module.exports = VisionectApiClient
