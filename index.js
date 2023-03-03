@@ -20,25 +20,27 @@ class VisionectApiClient {
   delete = (path, data) => this.call('DELETE', path, data)
   options = (path) => this.call('OPTIONS', path)
 
-  crud = (name) => Object.create({
+  #crud = (name) => Object.create({
     get: (id) => this.get(`/api/${name}/${id || ''}`),
     create: (id, data) => this.post(`/api/${name}/${id}`, data),
     update: (arg1, arg2) => arg2 ? this.put(`/api/${name}/${arg1}`, arg2) : this.put(`/api/${name}/`, arg1),
     delete: (id) => this.delete(`/api/${name}/${id}`),
   })
 
-  devices = _.omit(Object.assign(this.crud('device'), {
+  #restart = (name, method) => (...uuids) => uuids.length === 1 ? this.post(`/api/${name}/${uuids[0]}/${method}`) : this.post(`/api/${name}/${method}`, uuids)
+
+  devices = _.omit(Object.assign(this.#crud('device'), {
     config: (uuid, data) => data ? this.post(`/api/cmd/Param/${uuid}`, data) : this.get(`/api/devicetclv/${uuid}`),
-    reboot: (uuid) => this.post(uuid ? `/api/device/${uuid}/reboot` : '/api/device/reboot'),
+    reboot: this.#restart('device', 'reboot'),
     liveView: (uuid, cached = false, fileType = '.png') => this.get(`/api/live/device/${uuid}/${cached ? 'cached' : 'image'}${fileType}`)
   }), 'create')
 
-  sessions = Object.assign(this.crud('session'), {
-    restart: (uuid) => this.post(uuid ? `/api/session/${uuid}/restart` : '/api/device/restart'),
+  sessions = Object.assign(this.#crud('session'), {
+    restart: this.#restart('session', 'restart'),
     clearCache: (...uuids) => this.post('/api/session/webkit-clear-cache', uuids)
   })
 
-  users = this.crud('user')
+  users = this.#crud('user')
 
   config = (data) => data ? this.put('/api/config/', data) : this.get('/api/config/')
 }

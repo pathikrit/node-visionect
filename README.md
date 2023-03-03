@@ -34,10 +34,8 @@ visionect.devices.delete(uuid) // delete a devices
 visionect.devices.config(uuid) // Get config for device
 visionect.devices.config(uuid, data) // Set config for device
 
-visionect.devices.reboot(uuid) // reboot one device
-visionect.devices.reboot() // reboot all devices
-
-visionect.devices.liveView(uuid) // return current image that is displayed on the device
+visionect.devices.reboot(uuid1, uuid2, /*...*/) // reboot devices
+visionect.devices.liveView(uuid, cached) // return current image that is displayed on the device
 visionect.devices.liveView(uuid, cached = true) // return the server side image for the device
 ```
 
@@ -51,9 +49,8 @@ visionect.sessions.update(data) // update all sessions
 
 visionect.sessions.create(data) // create a session
 
-visionect.sessions.restart(uuid) // restart a session
-visionect.sessions.restart() // restart all sessions
-visionect.sessions.clearCache(uuid1, uuid2, /*...*/) // restart sessions for given uuids
+visionect.sessions.restart(uuid1, uuid2, /*...*/) // restart sessions
+visionect.sessions.clearCache(uuid1, uuid2, /*...*/) // clear session caches
 ```
 
 ### User APIs
