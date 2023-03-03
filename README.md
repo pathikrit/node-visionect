@@ -14,7 +14,7 @@ const visionect = new VisionectApiClient('https://localhost:8081', 'apiKey', 'ap
 
 visionect.devices.get().then(res => console.log(res))
 
-visionect.devices.update()
+visionect.devices.reboot(uuid)
   .then(res => console.log(res))
   .catch(err => console.error(err))
 ```
@@ -70,11 +70,12 @@ visionect.users.update(data) // update all users
 visionect.users.create(data) // create a user
 ```
 
-### Config APIs
+### Server APIs
 ```js
 visionect.status() // Get server status
 visionect.config() // Get server config
 visionect.config(data) // Set server config
+visionect.orphans(all = true) // See http://api.visionect.com/#health
 ```
 
 ### Primitive APIs

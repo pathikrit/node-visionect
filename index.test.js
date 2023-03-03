@@ -22,4 +22,5 @@ check(
   visionect.config(),
   visionect.status(),
   visionect.devices.view(uuid).get(),
+  visionect.orphans(),
 )

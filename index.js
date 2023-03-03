@@ -52,6 +52,7 @@ class VisionectApiClient {
 
   config = (data) => data ? this.put('/api/config/', data) : this.get('/api/config/')
   status = () => this.get('/api/status/')
+  orphans = (all = true) => this.get(`/api/orphans?all=${all}`)
 }
 
 module.exports = VisionectApiClient
