@@ -36,6 +36,9 @@ visionect.devices.config(uuid, data) // Set config for device
 
 visionect.devices.reboot(uuid) // reboot one device
 visionect.devices.reboot() // reboot all devices
+
+visionect.devices.liveView(uuid) // return current image that is displayed on the device
+visionect.devices.liveView(uuid, cached = true) // return the server side image for the device
 ```
 
 ### Session APIs
