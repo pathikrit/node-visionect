@@ -36,9 +36,13 @@ visionect.devices.config(uuid) // Get config for device
 visionect.devices.config(uuid, data) // Set config for device
 
 visionect.devices.reboot(uuid1, uuid2, /*...*/) // reboot devices
+```
 
-visionect.devices.liveView(uuid, cached) // return current image that is displayed on the device
-visionect.devices.liveView(uuid, cached = true) // return the server side image for the device
+### Live View APIs
+```js
+visionect.devices.view(uuid).get() // return current image that is displayed on the device
+visionect.devices.view(uuid).get(cached = true) // return the server side image for the device
+visionect.devices.view(uuid).set(img) // Set the image on device; see http://api.visionect.com/#backends
 ```
 
 ### Session APIs

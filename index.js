@@ -9,7 +9,11 @@ class VisionectApiClient {
       const headers = {'Date': new Date().toUTCString(), 'Content-Type': 'application/json',}
       headers['Authorization'] = `${apiKey}:${hmac([method, '', headers['Content-Type'], headers['Date'], path].join('\n'))}`
       const promise = axios({method: method, url: apiServer + path, headers: headers, data: data})
-      return process.env.NODE_ENV === 'test' ? {method: method, path: path, promise: promise} : promise.then(res => res.data)
+      if (process.env.NODE_ENV === 'test') {
+        console.assert(method === 'GET', 'Aborting non-GET API call in tests')
+        return {method: method, path: path, promise: promise}
+      }
+      return promise.then(res => res.data)
     }
   }
 
@@ -33,7 +37,10 @@ class VisionectApiClient {
     config: (uuid, data) => data ? this.post(`/api/cmd/Param/${uuid}`, data) : this.get(`/api/devicetclv/${uuid}`),
     status: (uuid, from, to, group = true) => this.get(`api/devicestatus/${uuid}?from=${from}&to=${to}&group=${group}`),
     reboot: this.#restart('device', 'reboot'),
-    liveView: (uuid, cached = false, fileType = '.png') => this.get(`/api/live/device/${uuid}/${cached ? 'cached' : 'image'}${fileType}`)
+    view: (uuid) => Object.create({
+      get: (cached = false, fileType = '.png') => this.get(`/api/live/device/${uuid}/${cached ? 'cached' : 'image'}${fileType}`),
+      set: (img) => this.put(`/backend/${uuid}`, img)
+    })
   }), 'create')
 
   sessions = Object.assign(this.#crud('session'), {
