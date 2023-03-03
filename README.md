@@ -1,4 +1,4 @@
-# node-visionect  [![CI](https://github.com/pathikrit/node-visionect/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/pathikrit/node-visionect/actions/workflows/ci.yml)
+# node-visionect [![CI](https://github.com/pathikrit/node-visionect/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pathikrit/node-visionect/actions/workflows/ci.yml)
 
 A lightweight node.js Promise based wrapper around the [Visionect Server Management API](http://api.visionect.com/)
 
@@ -13,20 +13,42 @@ const {VisionectApiClient} = require('node-joan');
 
 const visionect = new VisionectApiClient('https://localhost:8081', 'apiKey', 'apiSecret')
 
-visionect.devices.all.list().then(res => console.log(res))
+visionect.devices.get().then(res => console.log(res))
 
-visionect.device.update()
+visionect.devices.update()
   .then(res => console.log(res))
   .catch(err => console.error(err))
 ```
 
 ## APIs
 ```js
+// Devices APIs
 visionect.devices.get() // get all devices
 visionect.devices.get(uuid) // get a particular device
 
+visionect.devices.update(uuid, data) // update a particular device
+visionect.devices.update(data) // update all devices
+
+visionect.devices.delete(uuid) // delete a devices
+
+visionect.devices.config(uuid) // Get config for device
+visionect.devices.config(uuid, data) // Set config for device
+
 visionect.devices.reboot(uuid) // reboot one device
-visionect.devices.reboot() // reboot all
+visionect.devices.reboot() // reboot all devices
+
+// Session APIs
+visionect.sessions.get() // get all sessions
+visionect.sessions.get(uuid) // get a particular session
+
+visionect.sessions.update(uuid, data) // update a particular session
+visionect.sessions.update(data) // update all sessions
+
+visionect.sessions.create(data) // create a session
+
+visionect.sessions.restart(uuid) // restart a session
+visionect.sessions.restart() // restart all sessions
+visionect.sessions.clearCache(uuid1, uuid2, /*...*/) // restart sessions for given uuids
 ```
 
 ### Primitive APIs

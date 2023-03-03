@@ -8,7 +8,7 @@ class VisionectApiClient {
       const headers = {'Date': new Date().toUTCString(), 'Content-Type': 'application/json',}
       headers['Authorization'] = `${apiKey}:${hmac([method, '', headers['Content-Type'], headers['Date'], path].join('\n'))}`
       const promise = axios({method: method, url: apiServer + path, headers: headers, data: data})
-      return process.env.NODE_ENV === 'test' ? {name: `${method} ${path}`, promise: promise} : promise.then(res => res.data)
+      return process.env.NODE_ENV === 'test' ? {method: method, path: path, promise: promise} : promise.then(res => res.data)
     }
   }
 
@@ -25,6 +25,15 @@ class VisionectApiClient {
     delete: (uuid) => this.delete(`/api/device/${uuid}`),
     config: (uuid, data) => data ? this.post(`/api/cmd/Param/${uuid}`, data) : this.get(`/api/devicetclv/${uuid}`),
     reboot: (uuid) => this.post(uuid ? `/api/device/${uuid}/reboot` : '/api/device/reboot')
+  }
+
+  sessions = {
+    get: (uuid) => this.get(`/api/session/${uuid || ''}`),
+    create: (uuid, data) => this.post(`/api/session/${uuid}`, data),
+    update: (arg1, arg2) => arg2 ? this.put(`/api/session/${arg1}`, arg2) : this.put(`/api/session/`, arg1),
+    delete: (uuid) => this.delete(`/api/session/${uuid}`),
+    restart: (uuid) => this.post(uuid ? `/api/session/${uuid}/restart` : '/api/device/restart'),
+    clearCache: (...uuids) => this.post('/api/session/webkit-clear-cache', uuids)
   }
 
   users = {
