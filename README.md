@@ -31,10 +31,12 @@ visionect.devices.update(data) // update all devices
 
 visionect.devices.delete(uuid) // delete a devices
 
+visionect.devices.status(uuid, from, to, group) // See http://api.visionect.com/#device-status-device-status
 visionect.devices.config(uuid) // Get config for device
 visionect.devices.config(uuid, data) // Set config for device
 
 visionect.devices.reboot(uuid1, uuid2, /*...*/) // reboot devices
+
 visionect.devices.liveView(uuid, cached) // return current image that is displayed on the device
 visionect.devices.liveView(uuid, cached = true) // return the server side image for the device
 ```
@@ -66,6 +68,7 @@ visionect.users.create(data) // create a user
 
 ### Config APIs
 ```js
+visionect.status() // Get server status
 visionect.config() // Get server config
 visionect.config(data) // Set server config
 ```

@@ -31,6 +31,7 @@ class VisionectApiClient {
 
   devices = _.omit(Object.assign(this.#crud('device'), {
     config: (uuid, data) => data ? this.post(`/api/cmd/Param/${uuid}`, data) : this.get(`/api/devicetclv/${uuid}`),
+    status: (uuid, from, to, group = true) => this.get(`api/devicestatus/${uuid}?from=${from}&to=${to}&group=${group}`),
     reboot: this.#restart('device', 'reboot'),
     liveView: (uuid, cached = false, fileType = '.png') => this.get(`/api/live/device/${uuid}/${cached ? 'cached' : 'image'}${fileType}`)
   }), 'create')
@@ -43,6 +44,7 @@ class VisionectApiClient {
   users = this.#crud('user')
 
   config = (data) => data ? this.put('/api/config/', data) : this.get('/api/config/')
+  status = () => this.get('/api/status/')
 }
 
 module.exports = VisionectApiClient

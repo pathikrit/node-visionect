@@ -21,5 +21,6 @@ check(
   visionect.users.get(),
   visionect.users.get(apiKey),
   visionect.config(),
+  visionect.status(),
   visionect.devices.liveView(uuid),
 )
