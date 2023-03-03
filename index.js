@@ -1,5 +1,6 @@
 const crypto = require("crypto")
 const axios = require('axios')
+const _ = require('underscore')
 
 class VisionectApiClient {
   constructor(apiServer, apiKey, apiSecret) {
@@ -26,11 +27,10 @@ class VisionectApiClient {
     delete: (id) => this.delete(`/api/${name}/${id}`),
   })
 
-  devices = Object.assign(this.crud('device'), {
+  devices = _.omit(Object.assign(this.crud('device'), {
     config: (uuid, data) => data ? this.post(`/api/cmd/Param/${uuid}`, data) : this.get(`/api/devicetclv/${uuid}`),
     reboot: (uuid) => this.post(uuid ? `/api/device/${uuid}/reboot` : '/api/device/reboot')
-  })
-  //TODO: delete devices['create'];
+  }), 'create')
 
   sessions = Object.assign(this.crud('session'), {
     restart: (uuid) => this.post(uuid ? `/api/session/${uuid}/restart` : '/api/device/restart'),
