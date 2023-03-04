@@ -2,7 +2,7 @@ require('dotenv').config()
 const {apiServer, apiKey, apiSecret, uuid} = process.env
 
 const VisionectApiClient = require('./index.js')
-const visionect = new VisionectApiClient(apiServer, apiKey, apiSecret)
+const visionect = new VisionectApiClient(process.env)
 
 // Monkey patch the call method
 visionect._call = visionect.call

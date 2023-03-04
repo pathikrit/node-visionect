@@ -3,12 +3,12 @@ const axios = require('axios')
 const _ = require('underscore')
 
 class VisionectApiClient {
-  constructor(apiServer, apiKey, apiSecret) {
+  constructor(config) {
     this.call = (method, path, data) => {
-      const hmac = str => crypto.createHmac('sha256', apiSecret).update(str).digest("base64")
+      const hmac = str => crypto.createHmac('sha256', config.apiSecret).update(str).digest("base64")
       const headers = {'Date': new Date().toUTCString(), 'Content-Type': 'application/json',}
-      headers['Authorization'] = `${apiKey}:${hmac([method, '', headers['Content-Type'], headers['Date'], path].join('\n'))}`
-      return axios({method: method, url: apiServer + path, headers: headers, data: data})
+      headers['Authorization'] = `${config.apiKey}:${hmac([method, '', headers['Content-Type'], headers['Date'], path].join('\n'))}`
+      return axios({method: method, url: config.apiServer + path, headers: headers, data: data})
     }
   }
 

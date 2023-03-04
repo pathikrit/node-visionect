@@ -10,7 +10,11 @@ npm add node-visionect
 ```js
 const VisionectApiClient = require('node-joan');
 
-const visionect = new VisionectApiClient('https://localhost:8081', 'apiKey', 'apiSecret')
+const visionect = new VisionectApiClient({
+  apiServer: 'https://localhost:8081',
+  apiKey: '<apiKey>',
+  apiSecret: '<apiSecret>'
+})
 
 visionect.devices.get().then(res => console.log(res))
 
