@@ -32,6 +32,7 @@ visionect.devices.get(uuid) // get a particular device
 
 visionect.devices.update(uuid, data) // update a particular device
 visionect.devices.update(data) // update all devices
+visionect.devices.patch(uuid, data) // Partial update device
 
 visionect.devices.delete(uuid) // delete a devices
 
@@ -56,6 +57,7 @@ visionect.sessions.get(uuid) // get a particular session
 
 visionect.sessions.update(uuid, data) // update a particular session
 visionect.sessions.update(data) // update all sessions
+visionect.sessions.patch(uuid, data) // Partial update a session
 
 visionect.sessions.create(data) // create a session
 
@@ -70,6 +72,7 @@ visionect.users.get(username) // get a particular user
 
 visionect.users.update(username, data) // update a particular user
 visionect.users.update(data) // update all users
+visionect.users.patch(uuid, data) // Partial update a user
 
 visionect.users.create(data) // create a user
 ```
