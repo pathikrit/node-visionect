@@ -4,6 +4,13 @@ const {apiServer, apiKey, apiSecret, uuid} = process.env
 const VisionectApiClient = require('./index.js')
 const visionect = new VisionectApiClient(apiServer, apiKey, apiSecret)
 
+// Monkey patch the call method
+visionect._call = visionect.call
+visionect.call = (method, path, data) => {
+  console.assert(method === 'GET', 'Aborting non-GET API call in tests')
+  return {method: method, path: path, promise: visionect._call(method, path, data)}
+}
+
 check = (...apis) => apis.forEach(api => {
   test(`${api.method} ${api.path}`, () => api.promise.then(res => {
     console.debug(api.path, '\n', res.headers['content-type'] === 'application/json' ? res.data : res.headers['content-type'])

@@ -8,12 +8,7 @@ class VisionectApiClient {
       const hmac = str => crypto.createHmac('sha256', apiSecret).update(str).digest("base64")
       const headers = {'Date': new Date().toUTCString(), 'Content-Type': 'application/json',}
       headers['Authorization'] = `${apiKey}:${hmac([method, '', headers['Content-Type'], headers['Date'], path].join('\n'))}`
-      const promise = axios({method: method, url: apiServer + path, headers: headers, data: data})
-      if (process.env.NODE_ENV === 'test') {
-        console.assert(method === 'GET', 'Aborting non-GET API call in tests')
-        return {method: method, path: path, promise: promise}
-      }
-      return promise.then(res => res.data)
+      return axios({method: method, url: apiServer + path, headers: headers, data: data})
     }
   }
 
