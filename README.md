@@ -16,11 +16,12 @@ const visionect = new VisionectApiClient({
   apiSecret: '<apiSecret>'
 })
 
-visionect.devices.get().then(res => console.log(res))
-
-visionect.devices.reboot(uuid)
+visionect.devices.get()
   .then(res => console.log(res))
   .catch(err => console.error(err))
+
+// Update URL
+visionect.sessions.patch(uuid, {Backend: {Fields: {url: 'https://example.com'}}})
 ```
 
 ## APIs
@@ -32,7 +33,7 @@ visionect.devices.get(uuid) // get a particular device
 
 visionect.devices.update(uuid, data) // update a particular device
 visionect.devices.update(data) // update all devices
-visionect.devices.patch(uuid, data) // Partial update device
+visionect.devices.patch(uuid, data) // Partial update a device
 
 visionect.devices.delete(uuid) // delete a devices
 

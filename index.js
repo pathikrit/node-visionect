@@ -23,14 +23,14 @@ class VisionectApiClient {
     const get = (id) => this.get(`/api/${name}/${id || ''}`)
     const create = (id, data) => this.post(`/api/${name}/${id}`, data)
     const update = (arg1, arg2) => arg2 ? this.put(`/api/${name}/${arg1}`, arg2) : this.put(`/api/${name}/`, arg1)
-    const del = (id) => this.delete(`/api/${name}/${id}`)
+    const delte = (id) => this.delete(`/api/${name}/${id}`)
     const patch = (id, data) => get(id).then(res => update(id, _.merge(res.data, data)))
-    return {get: get, create: create, update: update, delete: del, patch: patch}
+    return {get: get, create: create, update: update, delete: delte, patch: patch}
   }
 
   #restart = (name, method) => (...uuids) => uuids.length === 1 ? this.post(`/api/${name}/${uuids[0]}/${method}`) : this.post(`/api/${name}/${method}`, uuids)
 
-  devices = Object.assign(this.#crud('device'), {
+  devices = _.omit(Object.assign(this.#crud('device'), {
     config: (uuid, data) => data ? this.post(`/api/cmd/Param/${uuid}`, data) : this.get(`/api/devicetclv/${uuid}`),
     status: (uuid, from, to, group = true) => this.get(`api/devicestatus/${uuid}?from=${from}&to=${to}&group=${group}`),
     reboot: this.#restart('device', 'reboot'),
@@ -38,8 +38,7 @@ class VisionectApiClient {
       get: (cached = false, fileType = '.png') => this.get(`/api/live/device/${uuid}/${cached ? 'cached' : 'image'}${fileType}`),
       set: (img) => this.put(`/backend/${uuid}`, img)
     })
-  })
-  devices = _.omit(this.devices, 'create')
+  }), 'create')
 
   sessions = Object.assign(this.#crud('session'), {
     restart: this.#restart('session', 'restart'),
