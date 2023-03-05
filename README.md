@@ -1,6 +1,6 @@
 # node-visionect [![CI](https://github.com/pathikrit/node-visionect/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pathikrit/node-visionect/actions/workflows/ci.yml)
 
-A lightweight node.js Promise based wrapper around the [Visionect Server Management API](http://api.visionect.com/)
+A thin node.js [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) based wrapper around the [Visionect Server Management API](http://api.visionect.com/)
 
 ## Installation [![NPM Package Version](https://img.shields.io/npm/v/node-visionect.svg?)](https://www.npmjs.com/package/node-visionect)
 ```sh
@@ -17,12 +17,13 @@ const visionect = new VisionectApiClient({
 })
 
 visionect.devices.get()
-  .then(res => console.log(res))
+  .then(res => console.log(res.status, res.headers, res.data))
   .catch(err => console.error(err))
 
 // Update URL
 visionect.sessions.patch(uuid, {Backend: {Fields: {url: 'https://example.com'}}})
 ```
+This library is used in production by the [Newswall project](https://github.com/pathikrit/newswall) - feel free to refer to it for further usage examples.
 
 ## APIs
 
@@ -95,4 +96,5 @@ visionect.put(path, data)
 visionect.patch(path, data)
 visionect.delete(path, data)
 visionect.options(path)
+visionect.call('HEAD', path, data) // For any other HTTP verbs
 ```
