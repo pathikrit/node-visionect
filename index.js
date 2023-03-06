@@ -23,15 +23,17 @@ class VisionectApiClient {
 
   #restart = (name, method) => (...uuids) => uuids.length === 1 ? this.http.post(`/api/${name}/${uuids[0]}/${method}`) : this.http.post(`/api/${name}/${method}`, uuids)
 
-  devices = _.omit(Object.assign(this.#crud('device'), {
+  #devices = _.omit(this.#crud('device'), 'create')
+  devices = _.merge({}, this.#devices, {
+    get: (uuid, from, to = Date.now()/1000, group = true) =>
+        this.from ? this.http.get(`/api/devicestatus/${uuid}`, {params: {from: Math.floor(from), to: Math.ceil(to), group: group}}) : this.#devices.get(uuid),
     config: (uuid, data) => data ? this.http.post(`/api/cmd/Param/${uuid}`, data) : this.http.get(`/api/devicetclv/${uuid}`),
-    status: (uuid, from, to, group = true) => this.http.get(`/api/devicestatus/${uuid}?from=${from}&to=${to}&group=${group}`),
     reboot: this.#restart('device', 'reboot'),
     view: (uuid) => Object.create({
       get: (cached = false, fileType = '.png') => this.http.get(`/api/live/device/${uuid}/${cached ? 'cached' : 'image'}${fileType}`),
       set: (img) => this.http.put(`/backend/${uuid}`, img)
     })
-  }), 'create')
+  })
 
   sessions = Object.assign(this.#crud('session'), {
     restart: this.#restart('session', 'restart'),

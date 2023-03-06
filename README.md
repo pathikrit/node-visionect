@@ -31,6 +31,7 @@ This library is used in production by the [Newswall project](https://github.com/
 ```js
 visionect.devices.get() // get all devices
 visionect.devices.get(uuid) // get a particular device
+visionect.devices.get(uuid, from, to = now, group = false) // Get an array of historical statuses; See http://api.visionect.com/#device-status-device-status
 
 visionect.devices.update(uuid, data) // update a particular device
 visionect.devices.update(data) // update all devices
@@ -38,7 +39,7 @@ visionect.devices.patch(uuid, data) // Partial update a device
 
 visionect.devices.delete(uuid) // delete a devices
 
-visionect.devices.status(uuid, from, to, group) // See http://api.visionect.com/#device-status-device-status
+visionect.devices.status(uuid, from, to, group) 
 visionect.devices.config(uuid) // Get config for device
 visionect.devices.config(uuid, data) // Set config for device
 
@@ -99,7 +100,7 @@ visionect.http.options(path)
 ```
 
 ### Intercept Requests / Responses
-Use [axios interceptors](https://axios-http.com/docs/interceptors) to intercept requests/response
+Use [axios interceptors](https://axios-http.com/docs/interceptors) to intercept requests/response:
 ```js
 visionect.http.interceptors.request.use(req => {
   console.assert(process.env.NODE_ENV !== 'test' || req.method === 'GET', 'Cannot make non-GET API calls from tests')

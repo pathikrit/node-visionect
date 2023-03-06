@@ -22,6 +22,7 @@ check(
   ['Get all devices', visionect.devices.get()],
   ['Get one device', visionect.devices.get(uuid)],
   ['Get device config', visionect.devices.config(uuid)],
+  ['Get device status', visionect.devices.get(uuid, Date.now()/1000 - 60*60)],
   ['Get all sessions', visionect.sessions.get()],
   ['Get one session', visionect.sessions.get(uuid)],
   ['Get all users', visionect.users.get()],
