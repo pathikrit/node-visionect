@@ -90,11 +90,10 @@ visionect.orphans(all = true) // See http://api.visionect.com/#health
 ### Primitive APIs
 Directly call any HTTP endpoints using the following low level utils:
 ```js
-visionect.get(path)
-visionect.post(path, data)
-visionect.put(path, data)
-visionect.patch(path, data)
-visionect.delete(path, data)
-visionect.options(path)
-visionect.call('HEAD', path, data) // For any other HTTP verbs
+visionect.http.get(path)
+visionect.http.post(path, data)
+visionect.http.put(path, data)
+visionect.http.patch(path, data)
+visionect.http.delete(path, data)
+visionect.http.options(path)
 ```
