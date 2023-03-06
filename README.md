@@ -8,7 +8,7 @@ npm add node-visionect
 ```
 ## Example
 ```js
-const VisionectApiClient = require('node-joan');
+const VisionectApiClient = require('node-joan')
 
 const visionect = new VisionectApiClient({
   apiServer: 'https://localhost:8081',
@@ -39,7 +39,6 @@ visionect.devices.patch(uuid, data) // Partial update a device
 
 visionect.devices.delete(uuid) // delete a devices
 
-visionect.devices.status(uuid, from, to, group) 
 visionect.devices.config(uuid) // Get config for device
 visionect.devices.config(uuid, data) // Set config for device
 
@@ -102,8 +101,15 @@ visionect.http.options(path)
 ### Intercept Requests / Responses
 Use [axios interceptors](https://axios-http.com/docs/interceptors) to intercept requests/response:
 ```js
+// Intercept requests
 visionect.http.interceptors.request.use(req => {
-  console.assert(process.env.NODE_ENV !== 'test' || req.method === 'GET', 'Cannot make non-GET API calls from tests')
+  console.assert(process.env.NODE_ENV !== 'test' || req.method.toUpperCase() === 'GET', 'Cannot make non-GET calls from tests')
   return req
+})
+
+// Intercept responses
+visionect.http.interceptors.response.use(res => {
+  console.log(res.config.method, res.config.url, res.status, res.headers)
+  return res
 })
 ```
