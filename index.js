@@ -4,12 +4,11 @@ const _ = require('lodash')
 
 class VisionectApiClient {
   constructor(config) {
-    const hmac = str => crypto.createHmac('sha256', config.apiSecret).update(str).digest("base64")
+    const hmac = (...args) => crypto.createHmac('sha256', config.apiSecret).update(args.join('\n')).digest("base64")
     this.http = axios.create({baseURL: config.apiServer, headers: {'Content-Type': 'application/json'}})
     this.http.interceptors.request.use(req => {
       req.headers['Date'] = new Date().toUTCString()
-      const hashThis = [req.method.toUpperCase(), '', req.headers['Content-Type'], req.headers['Date'], req.url]
-      req.headers['Authorization'] = `${config.apiKey}:${hmac(hashThis.join('\n'))}`
+      req.headers['Authorization'] = `${config.apiKey}:${hmac(req.method.toUpperCase(), '', req.headers['Content-Type'], req.headers['Date'], req.url)}`
       return req
     })
   }
