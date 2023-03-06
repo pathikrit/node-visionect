@@ -101,15 +101,15 @@ visionect.http.options(path)
 ### Intercept Requests / Responses
 Use [axios interceptors](https://axios-http.com/docs/interceptors) to intercept requests/response:
 ```js
-// Intercept requests
+// Intercept requests e.g. to block certain calls
 visionect.http.interceptors.request.use(req => {
   console.assert(process.env.NODE_ENV !== 'test' || req.method.toUpperCase() === 'GET', 'Cannot make non-GET calls from tests')
   return req
 })
 
-// Intercept responses
+// Intercept responses e.g. to debug log
 visionect.http.interceptors.response.use(res => {
-  console.log(res.config.method, res.config.url, res.status, res.headers)
+  console.debug(res.config.method, res.config.url, res.status, res.headers)
   return res
 })
 ```
