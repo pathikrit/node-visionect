@@ -1,14 +1,11 @@
 const crypto = require('crypto')
 const axios = require('axios')
 const _ = require('lodash')
-const dayjs = require('dayjs')
-  .extend(require('dayjs/plugin/utc'))
-  .extend(require('dayjs/plugin/arraySupport'))
 
 class VisionectApiClient {
   constructor(config) {
     const hmac = (...args) => crypto.createHmac('sha256', config.apiSecret).update(args.join('\n')).digest("base64")
-    this.http = axios.create({baseURL: config.apiServer, headers: {'Content-Type': 'application/json'}})
+    this.http = axios.create({baseURL: _.trimEnd(config.apiServer, '/'), headers: {'Content-Type': 'application/json'}})
     this.http.interceptors.request.use(req => {
       req.headers['Date'] = new Date().toUTCString()
       req.headers['Authorization'] = `${config.apiKey}:${hmac(req.method.toUpperCase(), '', req.headers['Content-Type'], req.headers['Date'], req.url)}`
@@ -30,12 +27,7 @@ class VisionectApiClient {
 
   #devices = _.omit(this.#crud('device'), 'create')
   devices = _.merge({}, this.#devices, {
-    get: (uuid, from, to = Date.now()/1000, group = false) => !from ? this.#devices.get(uuid) :
-      this.http.get(`/api/devicestatus/${uuid}`, {params: {from: Math.floor(from), to: Math.ceil(to), group: group}})
-        .then(res => _.set(res, 'data', res.data.map(r => _.merge(r, {
-          time: r?.Date?.length === 6 ? dayjs.utc(r.Date).subtract(1, 'month').toISOString() : undefined,
-          Status: { wifi: _.isInteger(r.Status?.RSSI) ? Math.min(Math.max(2*(100 - r.Status.RSSI), 0), 100) : undefined } //See: https://stackoverflow.com/a/31852591/471136
-        })))),
+    get: (uuid, from, to = Date.now()/1000, group = false) => from ? this.http.get(`/api/devicestatus/${uuid}`, {params: {from: Math.floor(from), to: Math.ceil(to), group: group}}) : this.#devices.get(uuid),
     config: (uuid, data) => data ? this.http.post(`/api/cmd/Param/${uuid}`, data) : this.http.get(`/api/devicetclv/${uuid}`),
     view: (uuid) => Object.create({
       get: (cached = false, fileType = '.png') => this.http.get(`/api/live/device/${uuid}/${cached ? 'cached' : 'image'}${fileType}`),

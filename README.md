@@ -107,7 +107,7 @@ visionect.http.interceptors.request.use(req => {
   return req
 })
 
-// Intercept responses e.g. to debug log
+// Intercept responses e.g. to log the response / request
 visionect.http.interceptors.response.use(res => {
   console.debug(res.config.method, res.config.url, res.status, res.headers)
   return res
