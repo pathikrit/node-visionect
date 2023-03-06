@@ -30,14 +30,12 @@ class VisionectApiClient {
 
   #devices = _.omit(this.#crud('device'), 'create')
   devices = _.merge({}, this.#devices, {
-    get: (uuid, from, to = Date.now()/1000, group = true) => !from ? this.#devices.get(uuid) :
+    get: (uuid, from, to = Date.now()/1000, group = false) => !from ? this.#devices.get(uuid) :
       this.http.get(`/api/devicestatus/${uuid}`, {params: {from: Math.floor(from), to: Math.ceil(to), group: group}})
-        .then(res => {
-          res.data = res.data.map(r => _.extend(r, {
-            time: dayjs.utc(r.Date).subtract(1, 'month').toISOString()
-          }))
-          return res
-        }),
+        .then(res => _.set(res, 'data', res.data.map(r => _.merge(r, {
+          time: dayjs.utc(r.Date).subtract(1, 'month').toISOString(),
+          Status: { wifi: Math.min(Math.max(2*(100 - r.Status.RSSI), 0), 100)} //See: https://stackoverflow.com/a/31852591/471136
+        })))),
     config: (uuid, data) => data ? this.http.post(`/api/cmd/Param/${uuid}`, data) : this.http.get(`/api/devicetclv/${uuid}`),
     view: (uuid) => Object.create({
       get: (cached = false, fileType = '.png') => this.http.get(`/api/live/device/${uuid}/${cached ? 'cached' : 'image'}${fileType}`),
