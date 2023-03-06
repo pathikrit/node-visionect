@@ -11,6 +11,11 @@ const visionect = new VisionectApiClient(process.env)
 //   return {method: method, path: path, promise: visionect._call(method, path, data)}
 // }
 
+visionect.http.interceptors.request.use(req => {
+  console.assert(req.method === 'GET', 'Cannot make non-GET API calls from tests')
+  return req
+})
+
 check = (...apis) => apis.forEach(api => {
   test(`${api.method} ${api.path}`, () => api.then(res => {
     console.debug(api.path, '\n', res.headers['content-type'] === 'application/json' ? res.data : res.headers['content-type'])

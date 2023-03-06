@@ -97,3 +97,12 @@ visionect.http.patch(path, data)
 visionect.http.delete(path, data)
 visionect.http.options(path)
 ```
+
+### Intercept Requests / Responses
+Use [axios interceptors](https://axios-http.com/docs/interceptors) to intercept requests/response
+```js
+visionect.http.interceptors.request.use(req => {
+  console.assert(process.env.NODE_ENV !== 'test' || req.method === 'GET', 'Cannot make non-GET API calls from tests')
+  return req
+})
+```

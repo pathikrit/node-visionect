@@ -1,4 +1,4 @@
-const crypto = require("crypto")
+const crypto = require('crypto')
 const axios = require('axios')
 const _ = require('lodash')
 
@@ -25,7 +25,7 @@ class VisionectApiClient {
 
   devices = _.omit(Object.assign(this.#crud('device'), {
     config: (uuid, data) => data ? this.http.post(`/api/cmd/Param/${uuid}`, data) : this.http.get(`/api/devicetclv/${uuid}`),
-    status: (uuid, from, to, group = true) => this.http.get(`api/devicestatus/${uuid}?from=${from}&to=${to}&group=${group}`),
+    status: (uuid, from, to, group = true) => this.http.get(`/api/devicestatus/${uuid}?from=${from}&to=${to}&group=${group}`),
     reboot: this.#restart('device', 'reboot'),
     view: (uuid) => Object.create({
       get: (cached = false, fileType = '.png') => this.http.get(`/api/live/device/${uuid}/${cached ? 'cached' : 'image'}${fileType}`),
