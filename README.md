@@ -43,7 +43,7 @@ visionect.devices.status(uuid, from, to, group)
 visionect.devices.config(uuid) // Get config for device
 visionect.devices.config(uuid, data) // Set config for device
 
-visionect.devices.reboot(uuid1, uuid2, /*...*/) // reboot devices
+visionect.devices.restart(uuid1, uuid2, /*...*/) // reboot devices
 ```
 
 ### Live View APIs

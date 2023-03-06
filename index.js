@@ -19,28 +19,28 @@ class VisionectApiClient {
     this.update = (arg1, arg2) => arg2 ? ctx.http.put(`/api/${name}/${arg1}`, arg2) : ctx.http.put(`/api/${name}/`, arg1)
     this.delete = (id) => ctx.http.delete(`/api/${name}/${id}`)
     this.patch = (id, data) => this.get(id).then(res => this.update(id, _.merge(res.data, data)))
+    this.restart = (...uuids) => {
+      const method = name === 'device' ? 'reboot' : 'restart'
+      return uuids.length === 1 ? this.http.post(`/api/${name}/${uuids[0]}/${method}`) : this.http.post(`/api/${name}/${method}`, uuids)
+    }
   }(this)
-
-  #restart = (name, method) => (...uuids) => uuids.length === 1 ? this.http.post(`/api/${name}/${uuids[0]}/${method}`) : this.http.post(`/api/${name}/${method}`, uuids)
 
   #devices = _.omit(this.#crud('device'), 'create')
   devices = _.merge({}, this.#devices, {
     get: (uuid, from, to = Date.now()/1000, group = true) =>
         this.from ? this.http.get(`/api/devicestatus/${uuid}`, {params: {from: Math.floor(from), to: Math.ceil(to), group: group}}) : this.#devices.get(uuid),
     config: (uuid, data) => data ? this.http.post(`/api/cmd/Param/${uuid}`, data) : this.http.get(`/api/devicetclv/${uuid}`),
-    reboot: this.#restart('device', 'reboot'),
     view: (uuid) => Object.create({
       get: (cached = false, fileType = '.png') => this.http.get(`/api/live/device/${uuid}/${cached ? 'cached' : 'image'}${fileType}`),
       set: (img) => this.http.put(`/backend/${uuid}`, img)
     })
   })
 
-  sessions = Object.assign(this.#crud('session'), {
-    restart: this.#restart('session', 'restart'),
+  sessions = _.extend(this.#crud('session'), {
     clearCache: (...uuids) => this.http.post('/api/session/webkit-clear-cache', uuids)
   })
 
-  users = this.#crud('user')
+  users = _.omit(this.#crud('user'), 'restart')
 
   config = (data) => data ? this.http.put('/api/config/', data) : this.http.get('/api/config/')
   status = () => this.http.get('/api/status/')
