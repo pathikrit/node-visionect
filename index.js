@@ -18,10 +18,10 @@ class VisionectApiClient {
     this.create = (id, data) => ctx.http.post(`/api/${name}/${id}`, data)
     this.update = (arg1, arg2) => arg2 ? ctx.http.put(`/api/${name}/${arg1}`, arg2) : ctx.http.put(`/api/${name}/`, arg1)
     this.delete = (id) => ctx.http.delete(`/api/${name}/${id}`)
-    this.patch = (id, data) => this.get(id).then(res => this.update(id, _.merge(res.data, data)))
+    this.patch = (id, data) => this.get(id).then(res => this.update(id, _.merge({}, res.data, data)))
     this.restart = (...uuids) => {
       const method = name === 'device' ? 'reboot' : 'restart'
-      return uuids.length === 1 ? this.http.post(`/api/${name}/${uuids[0]}/${method}`) : this.http.post(`/api/${name}/${method}`, uuids)
+      return uuids.length === 1 ? ctx.http.post(`/api/${name}/${uuids[0]}/${method}`) : ctx.http.post(`/api/${name}/${method}`, uuids)
     }
   }(this)
 
