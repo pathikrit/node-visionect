@@ -13,14 +13,13 @@ class VisionectApiClient {
     })
   }
 
-  #crud = (name) => {
-    const get = (id) => this.http.get(`/api/${name}/${id || ''}`)
-    const create = (id, data) => this.http.post(`/api/${name}/${id}`, data)
-    const update = (arg1, arg2) => arg2 ? this.http.put(`/api/${name}/${arg1}`, arg2) : this.http.put(`/api/${name}/`, arg1)
-    const delte = (id) => this.http.delete(`/api/${name}/${id}`)
-    const patch = (id, data) => get(id).then(res => update(id, _.merge(res.data, data)))
-    return {get: get, create: create, update: update, delete: delte, patch: patch}
-  }
+  #crud = (name) => new function (ctx) {
+    this.get = (id) => ctx.http.get(`/api/${name}/${id || ''}`)
+    this.create = (id, data) => ctx.http.post(`/api/${name}/${id}`, data)
+    this.update = (arg1, arg2) => arg2 ? ctx.http.put(`/api/${name}/${arg1}`, arg2) : ctx.http.put(`/api/${name}/`, arg1)
+    this.delete = (id) => ctx.http.delete(`/api/${name}/${id}`)
+    this.patch = (id, data) => this.get(id).then(res => this.update(id, _.merge(res.data, data)))
+  }(this)
 
   #restart = (name, method) => (...uuids) => uuids.length === 1 ? this.http.post(`/api/${name}/${uuids[0]}/${method}`) : this.http.post(`/api/${name}/${method}`, uuids)
 
