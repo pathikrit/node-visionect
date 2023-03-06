@@ -10,13 +10,14 @@ visionect.http.interceptors.request.use(req => {
   return req
 })
 
-visionect.http.interceptors.response.use(res => {
-  console.debug(res.config.method, res.config.url, '\n', res.headers['content-type'] === 'application/json' ? res.data : res.headers['content-type'])
-  expect(res.status).toBe(200)
-  return res
+check = (...tests) => tests.forEach(t => {
+  const [name, api] = t
+  test(name, () => api.then(res => {
+    console.debug(res.config.method, res.config.url, '\n', res.headers['content-type'] === 'application/json' ? res.data : res.headers['content-type'])
+    expect(res.status).toBe(200)
+  }))
 })
 
-check = (...tests) => tests.forEach(t => test(t[0], () => t[1].then(_ => {})))
 check(
   ['Get all devices', visionect.devices.get()],
   ['Get one device', visionect.devices.get(uuid)],
