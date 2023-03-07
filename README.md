@@ -10,18 +10,18 @@ npm add node-visionect
 ```js
 const VisionectApiClient = require('node-joan')
 
-const visionect = new VisionectApiClient({
+const vss = new VisionectApiClient({
   apiServer: 'https://localhost:8081',
   apiKey: '<apiKey>',
   apiSecret: '<apiSecret>'
 })
 
-visionect.devices.get()
+vss.devices.get()
   .then(res => console.log(res.status, res.headers, res.data))
   .catch(err => console.error(err))
 
 // Update URL
-visionect.sessions.patch(uuid, {Backend: {Fields: {url: 'https://example.com'}}})
+vss.sessions.patch(uuid, {Backend: {Fields: {url: 'https://example.com'}}})
 ```
 This library is used in production by the [Newswall project](https://github.com/pathikrit/newswall) - feel free to refer to it for further usage examples.
 
@@ -29,87 +29,91 @@ This library is used in production by the [Newswall project](https://github.com/
 
 ### Devices APIs
 ```js
-visionect.devices.get() // get all devices
-visionect.devices.get(uuid) // get a particular device
-visionect.devices.get(uuid, from, to = now, group = false) // Get an array of historical statuses; See http://api.visionect.com/#device-status-device-status
+vss.devices.get() // get all devices
+vss.devices.get(uuid) // get a particular device
+vss.devices.get(uuid, from, to = now, group = false) // Get an array of historical statuses; See http://api.vss.com/#device-status-device-status
 
-visionect.devices.update(uuid, data) // update a particular device
-visionect.devices.update(data) // update all devices
-visionect.devices.patch(uuid, data) // Partial update a device
+vss.devices.update(uuid, data) // update a particular device
+vss.devices.update(data) // update all devices
+vss.devices.patch(uuid, data) // Partial update a device
 
-visionect.devices.delete(uuid) // delete a devices
+vss.devices.delete(uuid) // delete a devices
 
-visionect.devices.config(uuid) // Get config for device
-visionect.devices.config(uuid, data) // Set config for device
+vss.devices.config(uuid) // Get config for device
+vss.devices.config(uuid, data) // Set config for device
 
-visionect.devices.restart(uuid1, uuid2, /*...*/) // reboot devices
+vss.devices.restart(uuid1, uuid2, /*...*/) // reboot devices
 ```
 
 ### Live View APIs
 ```js
-visionect.devices.view(uuid).get() // return current image that is displayed on the device
-visionect.devices.view(uuid).get(cached = true) // return the server side image for the device
-visionect.devices.view(uuid).set(img) // Set the image on device; see http://api.visionect.com/#backends
+vss.view.device(uuid) // return current image that is displayed on the device
+vss.view.server(uuid) // return the server side image for the device
+vss.view.set(uuid, img) // Set the image on device; see http://api.vss.com/#backends
 ```
 
 ### Session APIs
 ```js
-visionect.sessions.get() // get all sessions
-visionect.sessions.get(uuid) // get a particular session
+vss.sessions.get() // get all sessions
+vss.sessions.get(uuid) // get a particular session
 
-visionect.sessions.update(uuid, data) // update a particular session
-visionect.sessions.update(data) // update all sessions
-visionect.sessions.patch(uuid, data) // Partial update a session
+vss.sessions.update(uuid, data) // update a particular session
+vss.sessions.update(data) // update all sessions
+vss.sessions.patch(uuid, data) // Partial update a session
 
-visionect.sessions.create(data) // create a session
+vss.sessions.create(data) // create a session
 
-visionect.sessions.restart(uuid1, uuid2, /*...*/) // restart sessions
-visionect.sessions.clearCache(uuid1, uuid2, /*...*/) // clear session caches
+vss.sessions.restart(uuid1, uuid2, /*...*/) // restart sessions
+vss.sessions.clearCache(uuid1, uuid2, /*...*/) // clear session caches
 ```
 
 ### User APIs
 ```js
-visionect.users.get() // get all users
-visionect.users.get(username) // get a particular user
+vss.users.get() // get all users
+vss.users.get(username) // get a particular user
 
-visionect.users.update(username, data) // update a particular user
-visionect.users.update(data) // update all users
-visionect.users.patch(uuid, data) // Partial update a user
+vss.users.update(username, data) // update a particular user
+vss.users.update(data) // update all users
+vss.users.patch(uuid, data) // Partial update a user
 
-visionect.users.create(data) // create a user
+vss.users.create(data) // create a user
 ```
 
 ### Server APIs
 ```js
-visionect.status() // Get server status
-visionect.config() // Get server config
-visionect.config(data) // Set server config
-visionect.orphans(all = true) // See http://api.visionect.com/#health
+vss.server.status() // Get server status
+vss.server.config() // Get server config
+vss.server.config(data) // Set server config
+vss.server.orphans(all = true) // See http://api.vss.com/#health
 ```
 
 ### Primitive APIs
 Directly call any HTTP endpoints using the following low level utils:
 ```js
-visionect.http.get(path)
-visionect.http.post(path, data)
-visionect.http.put(path, data)
-visionect.http.patch(path, data)
-visionect.http.delete(path, data)
-visionect.http.options(path)
+vss.http.get(path)
+vss.http.post(path, data)
+vss.http.put(path, data)
+vss.http.patch(path, data)
+vss.http.delete(path, data)
+vss.http.options(path)
 ```
 
 ### Intercept Requests / Responses
-Use [axios interceptors](https://axios-http.com/docs/interceptors) to intercept requests/response:
+You can access the underlying [axios](https://axios-http.com/) HTTP caller via `vss.http`.
+This makes it possible to use any [axios plugins](https://www.npmjs.com/search?ranking=popularity&q=axios) or utils e.g. [interceptors](https://axios-http.com/docs/interceptors) to intercept requests/response:
 ```js
 // Intercept requests e.g. to block certain calls
-visionect.http.interceptors.request.use(req => {
+vss.http.interceptors.request.use(req => {
   console.assert(process.env.NODE_ENV !== 'test' || req.method.toUpperCase() === 'GET', 'Cannot make non-GET calls from tests')
   return req
 })
 
 // Intercept responses e.g. to log the response / request
-visionect.http.interceptors.response.use(res => {
+vss.http.interceptors.response.use(res => {
   console.debug(res.config.method, res.config.url, res.status, res.headers)
   return res
 })
+
+// 3rd party logger: https://github.com/hg-pyun/axios-logger
+vss.http.interceptors.request.use(AxiosLogger.requestLogger)
 ```

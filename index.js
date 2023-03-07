@@ -4,7 +4,7 @@ const _ = require('lodash')
 
 class VisionectApiClient {
   constructor(config) {
-    const hmac = (...args) => crypto.createHmac('sha256', config.apiSecret).update(args.join('\n')).digest("base64")
+    const hmac = (...args) => crypto.createHmac('sha256', config.apiSecret).update(args.join('\n')).digest('base64')
     this.http = axios.create({baseURL: _.trimEnd(config.apiServer, '/'), headers: {'Content-Type': 'application/json'}})
     this.http.interceptors.request.use(req => {
       req.headers['Date'] = new Date().toUTCString()
@@ -29,11 +29,13 @@ class VisionectApiClient {
   devices = _.merge({}, this.#devices, {
     get: (uuid, from, to = Date.now()/1000, group = false) => from ? this.http.get(`/api/devicestatus/${uuid}`, {params: {from: Math.floor(from), to: Math.ceil(to), group: group}}) : this.#devices.get(uuid),
     config: (uuid, data) => data ? this.http.post(`/api/cmd/Param/${uuid}`, data) : this.http.get(`/api/devicetclv/${uuid}`),
-    view: (uuid) => Object.create({
-      get: (cached = false, fileType = '.png') => this.http.get(`/api/live/device/${uuid}/${cached ? 'cached' : 'image'}${fileType}`),
-      set: (img) => this.http.put(`/backend/${uuid}`, img)
-    })
   })
+
+  view = {
+    device: (uuid, fileType = '.png') => this.http.get(`/api/live/device/${uuid}/cached${fileType}`),
+    server: (uuid, fileType = '.png') => this.http.get(`/api/live/device/${uuid}/image${fileType}`),
+    set: (uuid, img) => this.http.put(`/backend/${uuid}`, img)
+  }
 
   sessions = _.extend(this.#crud('session'), {
     clearCache: (...uuids) => this.http.post('/api/session/webkit-clear-cache', uuids)
@@ -41,9 +43,11 @@ class VisionectApiClient {
 
   users = _.omit(this.#crud('user'), 'restart')
 
-  config = (data) => data ? this.http.put('/api/config/', data) : this.http.get('/api/config/')
-  status = () => this.http.get('/api/status/')
-  orphans = (all = true) => this.http.get('/api/orphans', {params: {all: all}})
+  server = {
+    config: (data) => data ? this.http.put('/api/config/', data) : this.http.get('/api/config/'),
+    status: () => this.http.get('/api/status/'),
+    orphans: (all = true) => this.http.get('/api/orphans', {params: {all: all}})
+  }
 }
 
 module.exports = VisionectApiClient
