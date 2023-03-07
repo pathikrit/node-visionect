@@ -18,7 +18,7 @@ class VisionectApiClient {
     this.create = (id, data) => ctx.http.post(`/api/${name}/${id}`, data)
     this.update = (arg1, arg2) => arg2 ? ctx.http.put(`/api/${name}/${arg1}`, arg2) : ctx.http.put(`/api/${name}/`, arg1)
     this.delete = (id) => ctx.http.delete(`/api/${name}/${id}`)
-    this.patch = (id, data) => this.get(id).then(res => this.update(id, _.merge({}, res.data, data)))
+    this.patch = (id, data) => this.get(id).then(res => this.update(id, _.merge(res.data, data)))
     this.restart = (...uuids) => {
       const method = name === 'device' ? 'reboot' : 'restart'
       return uuids.length === 1 ? ctx.http.post(`/api/${name}/${uuids[0]}/${method}`) : ctx.http.post(`/api/${name}/${method}`, uuids)
@@ -44,7 +44,11 @@ class VisionectApiClient {
   users = _.omit(this.#crud('user'), 'restart')
 
   server = {
-    config: (data) => data ? this.http.put('/api/config/', data) : this.http.get('/api/config/'),
+    config: (data, patch = false) => {
+      const get = () => this.http.get('/api/config/')
+      const put = (data) => this.http.put('/api/config/', data)
+      return data ? (patch ? get().then(res => put(_.merge(res.data, data))) : put(data)) : get()
+    },
     status: () => this.http.get('/api/status/'),
     orphans: (all = true) => this.http.get('/api/orphans', {params: {all: all}})
   }

@@ -84,6 +84,7 @@ vss.users.create(data) // create a user
 vss.server.status() // Get server status
 vss.server.config() // Get server config
 vss.server.config(data) // Set server config
+vss.server.config(data, patch = true) // Partial update server config
 vss.server.orphans(all = true) // See http://api.vss.com/#health
 ```
 
