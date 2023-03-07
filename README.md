@@ -42,7 +42,7 @@ vss.devices.delete(uuid) // delete a devices
 vss.devices.config(uuid) // Get config for device
 vss.devices.config(uuid, data) // Set config for device
 
-vss.devices.restart(uuid1, uuid2, /*...*/) // reboot devices
+vss.devices.reboot(uuid1, uuid2, /*...*/) // reboot devices
 ```
 
 ### Live View APIs
