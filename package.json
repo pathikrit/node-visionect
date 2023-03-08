@@ -1,8 +1,7 @@
 {
   "name": "node-visionect",
-  "version": "0.0.5",
-  "type": "module",
-  "description": "Thin nodejs client around the Visionect Server Management API",
+  "version": "0.0.6",
+  "description": "Thin nodejs client for the Visionect Server Management API",
   "main": "index.js",
   "repository": "git@github.com:pathikrit/node-visionect.git",
   "author": "pathikrit <pathikritbhowmick@msn.com>",

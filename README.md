@@ -110,10 +110,16 @@ vss.http.interceptors.request.use(req => {
 })
 
 // Intercept responses e.g. to log the response / request
-vss.http.interceptors.response.use(res => {
-  console.debug(res.config.method, res.config.url, res.status, res.headers)
-  return res
-})
+vss.http.interceptors.response.use(
+  res => {
+    console.log(res.request.method, res.request.path, res.status, res.headers)
+    return res
+  }, 
+  err => {
+    console.error('Received non-2xx response', err)
+    return Promise.reject(err)
+  }
+)
 
 // 3rd party logger: https://github.com/hg-pyun/axios-logger
 vss.http.interceptors.request.use(AxiosLogger.requestLogger)
