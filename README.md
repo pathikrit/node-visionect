@@ -101,7 +101,7 @@ vss.http.options(path)
 
 ### Plugins
 You can access the underlying [axios](https://axios-http.com/) HTTP caller via `vss.http`.
-This makes it possible to use any [axios plugins](https://www.npmjs.com/search?ranking=popularity&q=axios) or utils e.g.
+This makes it possible to use any [axios plugins](https://www.npmjs.com/search?ranking=popularity&q=axios) e.g.
 ```js
 // This will print all API calls as curl commands to console
 const curlirize = require('axios-curlirize')
@@ -113,8 +113,8 @@ Use [axios interceptors](https://axios-http.com/docs/interceptors) to intercept 
 ```js
 // Intercept requests e.g. to block certain calls
 vss.http.interceptors.request.use(req => {
-  return (process.env.NODE_ENV === 'test' && req.method.toUpperCase() !== 'GET') ? 
-    Promise.reject('Cannot make non-GET calls from tests') : req
+  return (process.env.NODE_ENV === 'test' && req.method.toUpperCase() !== 'GET') ?
+    Promise.reject(`Cannot make ${req.method} API calls from tests`) : req
 })
 
 // Intercept responses e.g. to log the response / request

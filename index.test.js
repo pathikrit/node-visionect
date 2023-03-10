@@ -6,10 +6,7 @@ const VisionectApiClient = require('./index.js')
 const vss = new VisionectApiClient(process.env)
 curlirize(vss.http)
 
-vss.http.interceptors.request.use(req => {
-  req.method = req.method.toUpperCase()
-  return req.method === 'GET' ? req : Promise.reject(`Cannot make ${req.method} API calls from tests`)
-})
+vss.http.interceptors.request.use(req => req.method.toUpperCase() === 'GET' ? req : Promise.reject(`Cannot make ${req.method} API calls from tests`))
 
 test.each([
   vss.devices.get(),
