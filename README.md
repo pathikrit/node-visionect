@@ -123,4 +123,7 @@ vss.http.interceptors.response.use(
 
 // 3rd party logger: https://github.com/hg-pyun/axios-logger
 vss.http.interceptors.request.use(AxiosLogger.requestLogger)
+
+const curlirize = require('axios-curlirize')
+curlirize(vss.http) // This will print all API calls as curl commands to console
 ```

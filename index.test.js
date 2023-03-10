@@ -1,8 +1,10 @@
 require('dotenv').config()
 const {apiServer, apiKey, apiSecret, uuid} = process.env
+const curlirize = require('axios-curlirize')
 
 const VisionectApiClient = require('./index.js')
 const visionect = new VisionectApiClient(process.env)
+curlirize(visionect.http)
 
 visionect.http.interceptors.request.use(req => {
   console.assert(req.method === 'GET', `Cannot make ${req.method} API calls from tests`)
