@@ -1,7 +1,6 @@
 const crypto = require('crypto')
 const axios = require('axios')
 const _ = require('lodash')
-const curlirize = require('axios-curlirize')
 
 class VisionectApiClient {
   constructor({apiServer, apiKey, apiSecret}) {
