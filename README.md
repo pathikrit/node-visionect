@@ -99,14 +99,22 @@ vss.http.delete(path, data)
 vss.http.options(path)
 ```
 
-### Intercept Requests / Responses
+### Plugins
 You can access the underlying [axios](https://axios-http.com/) HTTP caller via `vss.http`.
-This makes it possible to use any [axios plugins](https://www.npmjs.com/search?ranking=popularity&q=axios) or utils e.g. [interceptors](https://axios-http.com/docs/interceptors) to intercept requests/response:
+This makes it possible to use any [axios plugins](https://www.npmjs.com/search?ranking=popularity&q=axios) or utils e.g.
+```js
+// This will print all API calls as curl commands to console
+const curlirize = require('axios-curlirize')
+curlirize(vss.http)
+```
+
+### Intercept Requests / Responses
+Use [axios interceptors](https://axios-http.com/docs/interceptors) to intercept requests/response:
 ```js
 // Intercept requests e.g. to block certain calls
 vss.http.interceptors.request.use(req => {
-  console.assert(process.env.NODE_ENV !== 'test' || req.method.toUpperCase() === 'GET', 'Cannot make non-GET calls from tests')
-  return req
+  return (process.env.NODE_ENV === 'test' && req.method.toUpperCase() !== 'GET') ? 
+    Promise.reject('Cannot make non-GET calls from tests') : req
 })
 
 // Intercept responses e.g. to log the response / request
@@ -114,7 +122,7 @@ vss.http.interceptors.response.use(
   res => {
     console.log(res.request.method, res.request.path, res.status, res.headers)
     return res
-  }, 
+  },
   err => {
     console.error('Received non-2xx response', err)
     return Promise.reject(err)
