@@ -11,7 +11,8 @@ vss.http.interceptors.request.use(req => req.method.toUpperCase() === 'GET' ? re
 test.each([
   vss.devices.get(),
   vss.devices.get(uuid),
-  vss.devices.config(uuid),
+  vss.devices.config.get(uuid),
+  //vss.devices.config.get(uuid, [49, 65]),
   vss.devices.get(uuid, Date.now()/1000 - 60*60),
   vss.view.device(uuid),
   vss.view.server(uuid),

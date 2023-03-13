@@ -39,10 +39,14 @@ vss.devices.patch(uuid, data) // Partial update a device
 
 vss.devices.delete(uuid) // delete a devices
 
-vss.devices.config(uuid) // Get config for device
-vss.devices.config(uuid, data) // Set config for device
-
 vss.devices.reboot(uuid1, uuid2, /*...*/) // reboot devices
+```
+### Device Config APIs
+```js
+vss.devices.config.get(uuid) // Get all config for device
+vss.devices.config.get(uuid, [typeId1, typeId2]/*, ...*/) // Get particular configs e.g. vss.devices.config.get(uuid, [65, 67])
+
+// Full list of type ids: https://docs.visionect.com/AppDevelopment/generalJsExtensions.html#tclv-list
 ```
 
 ### Live View APIs
