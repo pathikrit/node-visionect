@@ -30,7 +30,7 @@ class VisionectApiClient {
     config: {
       get: (uuid, types) => !types ? this.http.get(`/api/devicetclv/${uuid}`) :
         this.http.post(`/api/cmd/Param/${uuid}`, {Data: types.map(type => {return {Type: type, Control: 0, Value: ""}})}),
-      set: (uuid, data) => this.http.post(`/api/cmd/Param/${uuid}`, data)
+      set: (uuid, ...types) => this.http.post(`/api/cmd/Param/${uuid}`, {Data: types.map(type => _.merge(type, {Control: 1}))})
     }
   })
 

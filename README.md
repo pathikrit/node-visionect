@@ -44,9 +44,13 @@ vss.devices.reboot(uuid1, uuid2, /*...*/) // reboot devices
 ### Device Config APIs
 ```js
 vss.devices.config.get(uuid) // Get all config for device
-vss.devices.config.get(uuid, [typeId1, typeId2]/*, ...*/) // Get particular configs e.g. vss.devices.config.get(uuid, [65, 67])
+vss.devices.config.get(uuid, [typeId1, typeId2]/*, ...*/) // Get particular configs e.g. vss.devices.config.get(uuid, [65, 67]) to get WiFi info
+
+vss.devices.config.set(uuid, {Type: id1, value: v1}, {Type: id1, value: v2}, /*...*/) // Set configs
 
 // Full list of type ids: https://docs.visionect.com/AppDevelopment/generalJsExtensions.html#tclv-list
+// e.g. to disable system screens (the ones that show when charging or no WiFi)
+vss.devices.config.set(uuid, {Type: 49, Value: '0'})
 ```
 
 ### Live View APIs

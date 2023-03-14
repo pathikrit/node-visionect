@@ -1,6 +1,6 @@
 {
   "name": "node-visionect",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Thin nodejs client for the Visionect Server Management API",
   "main": "index.js",
   "repository": "git@github.com:pathikrit/node-visionect.git",
