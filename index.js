@@ -4,6 +4,7 @@ const _ = require('lodash')
 
 class VisionectApiClient {
   constructor({apiServer, apiKey, apiSecret}) {
+    [apiServer, apiKey, apiSecret].forEach(k => console.assert(k, 'Missing VSS API configuration'))
     const hmac = (...args) => crypto.createHmac('sha256', apiSecret).update(args.join('\n')).digest('base64')
     this.http = axios.create({baseURL: _.trimEnd(apiServer, '/'), headers: {'Content-Type': 'application/json'}})
     this.http.interceptors.request.use(req => {
