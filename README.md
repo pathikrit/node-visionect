@@ -58,6 +58,11 @@ vss.devices.config.set(uuid, {Type: 49, Value: '0'})
 vss.view.device(uuid) // return current image that is displayed on the device
 vss.view.server(uuid) // return the server side image for the device
 vss.view.set(uuid, img) // Set the image on device; see http://api.vss.com/#backends
+
+//Example: Save the live view image locally
+const fs = require('fs')
+const fileType = '.png'
+vss.view.device(uuid, fileType).then(res => fs.writeFileSync(uuid + fileType, res.data))
 ```
 
 ### Session APIs

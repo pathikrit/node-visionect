@@ -24,6 +24,6 @@ test.each([
   vss.server.status(),
   vss.server.orphans(),
 ])('API call %#', f => f.then(res => {
-  console.debug(res.request.method, res.request.path, '\n', res.headers['content-type'] === 'application/json' ? res.data : res.headers['content-type'])
+  console.debug(res.request.method, res.request.path, '\n', res.data)
   expect(res.status).toBe(200)
 }))

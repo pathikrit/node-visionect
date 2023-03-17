@@ -11,6 +11,7 @@ class VisionectApiClient {
       req.method = req.method.toUpperCase()
       req.headers['Date'] = new Date().toUTCString()
       req.headers['Authorization'] = `${apiKey}:${hmac(req.method, '', req.headers['Content-Type'], req.headers['Date'], req.url)}`
+      req.responseType = req.url.includes('/live/device/') ? 'arraybuffer' : 'json'
       return req
     })
   }
@@ -26,7 +27,8 @@ class VisionectApiClient {
 
   #devices = _.omit(this.#crud('device', 'reboot'), 'create')
   devices = _.merge({}, this.#devices, {
-    get: (uuid, from, to = Date.now()/1000, group = false) => from ? this.http.get(`/api/devicestatus/${uuid}`, {params: {from: Math.floor(from), to: Math.ceil(to), group: group}}) : this.#devices.get(uuid),
+    get: (uuid, from, to = Date.now()/1000, group = false) => !from ? this.#devices.get(uuid) :
+      this.http.get(`/api/devicestatus/${uuid}`, {params: {from: Math.floor(from), to: Math.ceil(to), group: group}}),
     config: {
       get: (uuid, types) => !types ? this.http.get(`/api/devicetclv/${uuid}`) :
         this.http.post(`/api/cmd/Param/${uuid}`, {Data: types.map(type => {return {Type: type, Control: 0, Value: ""}})}),
