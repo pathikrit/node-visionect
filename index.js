@@ -18,7 +18,7 @@ class VisionectApiClient {
 
   #crud = (name, restart) => new function (ctx) {
     this.get = (id) => ctx.http.get(`/api/${name}/${id || ''}`)
-    this.create = (id, data) => ctx.http.post(`/api/${name}/${id}`, data)
+    this.create = (data) => ctx.http.post(`/api/${name}`, data)
     this.update = (arg1, arg2) => arg2 ? ctx.http.put(`/api/${name}/${arg1}`, arg2) : ctx.http.put(`/api/${name}/`, arg1)
     this.delete = (id) => ctx.http.delete(`/api/${name}/${id}`)
     this.patch = (id, data) => this.get(id).then(res => this.update(id, _.merge(res.data, data)))
